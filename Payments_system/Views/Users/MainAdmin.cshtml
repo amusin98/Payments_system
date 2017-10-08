@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "MainAdmin";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <title>Payments_system</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script type="text/javascript" src="~/js/site.js"></script> 
+</head>
+<body>
+    <h2>MainAdmin</h2>
+    <form asp-controller="Accounts" asp-action="Unblock" method="post">
+        <label>Choose account: </label>
+        <select name="account" class="form-control">
+            @foreach (var item in ViewBag.BlockedAccs)
+            {
+                <option value="@item.AccountId">@item.AccountId</option>
+            }
+        </select><br>
+        <input type="submit" class="btn btn-success" value="Unblock" />
+        <input type="button" class="btn btn-success" value="Logout" onclick="location.href='@Url.Action("Logout", "Users")'" />
+    </form>
+    <h3>All accounts:</h3>
+    <table id="myTable2" class="table table-bordered">
+        <tr>
+            <th data-type="number" onclick="sortTable(0)">Id of account</th>
+            <th data-type="number" onclick="sortTable(1)">Id of card</th>
+            <th data-type="string" onclick="sortTable(2)">User email</th>
+            <th data-type="number" onclick="sortTable(3)">Balance</th>
+            <th data-type="string" onclick="sortTable(4)">Blocked</th>
+        </tr>
+        @foreach (var item in ViewBag.Accounts)
+        {
+            <tr>
+                <td>@item.AccountId</td>
+                <td>@item.CardId</td>
+                <td>@item.Card.User.Email</td>
+                <td>@item.Balance</td>
+                <td>@item.IsBlocked</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Account>
+@{
+    ViewData["Title"] = "Block";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Blocking account</h2>
+<form asp-controller="Accounts" asp-action="Block" method="post">
+    <label>Choose account: </label>
+    <select class="form-control" name="account">
+        @foreach (var item in ViewBag.UnBlockedAccounts)
+        {
+            <option value="@item.AccountId">@item.AccountId</option>
+        }
+    </select><br>
+    <input type="submit" class="btn btn-success" value="Block" />
+</form>
+<h3>All your accounts:</h3>
+<table class="table table-bordered">
+    <tr>
+        <th>Id of account</th>
+        <th>Id of card</th>
+        <th>Balance</th>
+        <th>Blocked</th>
+    </tr>
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td>@item.AccountId</td>
+            <td>@item.CardId</td>
+            <td>@item.Balance</td>
+            <td>@item.IsBlocked</td>
+        </tr>
+    }
+</table>
+

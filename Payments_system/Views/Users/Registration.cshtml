@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "Registration";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <title>Payments_system</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <h2>Registration</h2>
+    <form method="post" action="~/Users/Registration">
+        <label>Name:</label>
+        <input type="text" class="form-control" name="name" required="required" /><br>
+        <label>Surname:</label>
+        <input type="text" class="form-control" name="surname" required="required" /><br>
+        <label>Email:</label>
+        <input type="email" class="form-control" name="email" required="required" /><br>
+        <label>Password:</label>
+        <input type="password" class="form-control" name="password" required="required" /><br>
+        <input type="submit" class="btn btn-success" value="Confirm" />
+    </form>
+    </body>
+</html>

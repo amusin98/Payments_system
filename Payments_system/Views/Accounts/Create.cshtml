@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Card>;
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Creating account</h2>
+<form asp-controller="Accounts" asp-action="Create" method="post">
+    <label>Choose card: </label>
+    <select class="form-control" name="card">
+        @foreach (var item in ViewBag.FreeCards)
+        {
+            <option value="@item.CardId">@item.CardId</option>
+        }
+    </select><br>
+    <input type="submit" class="btn btn-success" value="Create"/>
+</form>
+<h3>All your cards:</h3>
+<table class="table table-bordered">
+    <tr>
+        <th>Id of card</th>
+        <th>Balance</th>
+    </tr>
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td>@item.CardId</td>
+            <td>@item.Balance</td>
+        </tr>
+    }
+</table>
+

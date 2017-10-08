@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Adding a card</h2>
+<form asp-controller="Cards" asp-action="Create" method="post">
+    <label>Balance of your card:</label>
+    <input type="text" class="form-control" name="balance" /><br>
+    <input type="submit" class="btn btn-success" value="Add" />
+</form>
+

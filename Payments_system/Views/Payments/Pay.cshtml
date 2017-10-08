@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewData["Title"] = "Pay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Pay</h2>
+<form asp-controller="Payments" asp-action="Pay" method="post">
+    <label>Choose goal of pay: </label>
+    <select class="form-control" name="goal">
+        @foreach (var item in ViewBag.Goals)
+        {
+            <option value="@item.GoalId">@item.GoalName</option>
+        }
+    </select><br>
+    <label>Choose account for pay: </label>
+    <select class="form-control" name="account">
+        @foreach (var item in ViewBag.Accounts)
+        {
+            <option value="@item.AccountId">@item.AccountId</option>
+        }
+    </select><br>
+    <label>Amount for pay: </label>
+    <input type="number" class="form-control" name="amount" /><br>
+    <input type="submit" class="btn btn-success" value="Confirm" />
+</form>
+<h3>All your accounts:</h3>
+<table class="table table-bordered" >
+    <thead>
+        <tr>
+            <th>Id of account</th>
+            <th>Id of card</th>
+            <th>Balance</th>
+            <th>Blocked</th>
+        </tr>
+    </thead>
+    @foreach (var item in ViewBag.Accounts)
+            {
+        <tr>
+            <td>@item.AccountId</td>
+            <td>@item.CardId</td>
+            <td>@item.Balance</td>
+            <td>@item.IsBlocked</td>
+        </tr>
+    }
+</table>
+                     <h3>All your cards:</h3>
+<table class="table table-bordered">
+    <tr>
+        <th>Id of card</th>
+        <th>Balance</th>
+    </tr>
+    @foreach (var item in ViewBag.Cards)
+            {
+        <tr>
+            <td>@item.CardId</td>
+            <td>@item.Balance</td>
+        </tr>
+    }
+</table>
+

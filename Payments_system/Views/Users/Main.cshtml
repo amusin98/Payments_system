@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@using Payments_system.Models;
+@model IEnumerable<Payment>
+@{
+    ViewData["Title"] = "Main";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>Welcome,  @{string surname = JsonConvert.DeserializeObject<User>(Context.Session.GetString("user")).Surname;
+                @surname}</h2><br>
+<h3>All payments:</h3>
+<table id="myTable2" class="table table-bordered">
+    <thead>
+        <tr>
+            <th data-type="number" onclick="sortTable(0)">Id of payment</th>
+            <th data-type="number" onclick="sortTable(1)">Id of account</th>
+            <th data-type="date" onclick="sortTable(2)">Date</th>
+            <th data-type="number" onclick="sortTable(3)">Amount</th>
+            <th data-type="string" onclick="sortTable(4)">Goal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PaymentId</td>
+                <td>@item.AccountId</td>
+                <td>@item.Date</td>
+                <td>@item.Amount</td>
+                <td>@item.Goal.GoalName</td>
+            </tr>
+        }
+    </tbody>
+</table>

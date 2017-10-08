@@ -1,1 +1,106 @@
 ﻿// Write your JavaScript code.
+
+
+
+function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("myTable2");
+    switching = true;
+    //Set the sorting direction to ascending:
+    dir = "asc";
+    rows = table.getElementsByTagName("TR");
+    var th = rows[0].getElementsByTagName("TH");
+    /*Make a loop that will continue until
+    no switching has been done:*/
+    while (switching) {
+        //start by saying: no switching is done:
+        switching = false;
+        
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            
+            x = rows[i].getElementsByTagName("TD")[n];
+            var set = th[n].dataset;
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            /*check if the two rows should switch place,
+            based on the direction, asc or desc:*/
+            if (dir == "asc" && set.type == "string") {
+                console.log(set.type);
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "asc" && set.type == "number") {
+                if (x.innerHTML - y.innerHTML > 0) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "asc" && set.type == "date") {
+                if (new Date(x.innerHTML.split(/[./]/)[2], x.innerHTML.split(/[./]/)[1], x.innerHTML.split(/[./]/)[0]) - new Date(y.innerHTML.split(/[./]/)[2], y.innerHTML.split(/[./]/)[1], y.innerHTML.split(/[./]/)[0]) > 0) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc" && set.type == "string") {
+                console.log(set.type);
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc" && set.type == "number") {
+                if (x.innerHTML - y.innerHTML < 0) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc" && set.type == "date") {
+                if (new Date(x.innerHTML.split(/[./]/)[2], x.innerHTML.split(/[./]/)[1], x.innerHTML.split(/[./]/)[0]) - new Date(y.innerHTML.split(/[./]/)[2], y.innerHTML.split(/[./]/)[1], y.innerHTML.split(/[./]/)[0]) < 0) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            //Each time a switch is done, increase this count by 1:
+            switchcount++;
+        } else {
+            /*If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again.*/
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+function hello() {
+    $.ajax({
+        type: "post",
+        URL: '@Url.Action("Ajax","Users")',
+        
+        data: "{login: '" + document.forms["form1"]["login"].value + "'}",
+        success: function (msg) {
+            console.log(msg);
+            alert(msg);
+        }
+    });
+}
+
+function sort(n) {
+    
+}
+
