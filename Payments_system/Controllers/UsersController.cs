@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Payments_system.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,6 +24,7 @@ namespace Payments_system.Controllers
 
         public UsersController(PaymentsContext context)
         {
+            StartData.Initialize(context);
             _context = context;
         }
 
@@ -86,13 +88,12 @@ namespace Payments_system.Controllers
                 HttpContext.Session.SetString("user", JsonConvert.SerializeObject(user));
                 if (user.IsAdmin)
                 {
-                    ViewBag.Accounts = _context.Accounts.Include(x => x.Card.User);
-                    ViewBag.BlockedAccs = _context.Accounts.Where(acc => acc.IsBlocked);
-                    return View("MainAdmin");
+                    return RedirectToAction("MainAdmin","Users");
                 }
                 else
                 {
-                    return View("Main", _context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId));
+                    return RedirectToAction("Main", "Users");
+                    //return View("Main", _context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId));
                 }
             }
             else
@@ -115,9 +116,148 @@ namespace Payments_system.Controllers
         //Get method for loading main page of user(used as aim of link on main page for return to main page)
         [HttpGet]
         [Authorize(Roles = "user")]
-        public IActionResult Main()
+        public IActionResult Main(int? payment, string goal, int? account, string date, int page = 1, PaymentsSortState sortOrder = PaymentsSortState.PaymentIdAsc)
         {
-            return View(_context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId));
+            int pageSize = 5;
+            IQueryable<Payment> source = _context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+
+            if (payment != null && payment != 0)
+            {
+                source = source.Where(x => x.PaymentId == payment);
+            }
+            if (account != null && account != 0)
+            {
+                source = source.Where(x => x.AccountId == account);
+            }
+            if (goal != null)
+            {
+                source = source.Where(x => x.Goal.GoalName == goal);
+            }
+            if (date != null)
+            {
+                source = source.Where(x => x.Date == date);
+            }
+
+            switch (sortOrder)
+            {
+                case PaymentsSortState.PaymentIdAsc:
+                    source = source.OrderBy(x => x.PaymentId);
+                    break;
+                case PaymentsSortState.PaymentIdDesc:
+                    source = source.OrderByDescending(x => x.PaymentId);
+                    break;
+                case PaymentsSortState.AccIdAsc:
+                    source = source.OrderBy(x => x.AccountId);
+                    break;
+                case PaymentsSortState.AccIdDesc:
+                    source = source.OrderByDescending(x => x.AccountId);
+                    break;
+                case PaymentsSortState.GoalAsc:
+                    source = source.OrderBy(x => x.Goal.GoalName);
+                    break;
+                case PaymentsSortState.GoalDesc:
+                    source = source.OrderByDescending(x => x.Goal.GoalName);
+                    break;
+                case PaymentsSortState.AmountAsc:
+                    source = source.OrderBy(x => x.Amount);
+                    break;
+                case PaymentsSortState.AmountDesc:
+                    source = source.OrderByDescending(x => x.Amount);
+                    break;
+                default:
+                    source = source.OrderBy(x => x.PaymentId);
+                    break;
+            }
+
+
+
+            var count = source.Count();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize);
+            PageViewModel pageView = new PageViewModel(count, page, pageSize);
+            UserPaymentsViewModel ivm = new UserPaymentsViewModel
+            {
+                PageViewModel = pageView,
+                SortViewModel = new SortPaymentsViewModel(sortOrder),
+                FilterViewModel = new FilterPaymentsViewModel(goal, date, account, payment),
+                Payments = items
+            };
+            return View("Main", ivm);
+        }
+
+
+        //Get method for loading main page of user(used as aim of link on main page for return to main page)
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public IActionResult MainAdmin(int? card, string email, int? account, int page=1, AccountsSortState sortOrder = AccountsSortState.AccIdAsc)
+        {
+            int pageSize = 10;
+            IQueryable<Account> source = _context.Accounts.Include(x => x.Card.User);
+
+            if (card != null && card != 0)
+            {
+                source = source.Where(x => x.CardId == card);
+            }
+            if (account != null && account != 0)
+            {
+                source = source.Where(x => x.AccountId == account);
+            }
+            if (email != null)
+            {
+                source = source.Where(x => x.Card.User.Email == email);
+            }
+
+            switch (sortOrder)
+            {
+                case AccountsSortState.AccIdAsc:
+                    source = source.OrderBy(x => x.AccountId);
+                    break;
+                case AccountsSortState.AccIdDesc:
+                    source = source.OrderByDescending(x => x.AccountId);
+                    break;
+                case AccountsSortState.CardIdAsc:
+                    source = source.OrderBy(x => x.CardId);
+                    break;
+                case AccountsSortState.CardIdDesc:
+                    source = source.OrderByDescending(x => x.CardId);
+                    break;
+                case AccountsSortState.EmailAsc:
+                    source = source.OrderBy(x => x.Card.User.Email);
+                    break;
+                case AccountsSortState.EmailDesc:
+                    source = source.OrderByDescending(x => x.Card.User.Email);
+                    break;
+                case AccountsSortState.BalanceAsc:
+                    source = source.OrderBy(x => x.Balance);
+                    break;
+                case AccountsSortState.BalanceDesc:
+                    source = source.OrderByDescending(x => x.Balance);
+                    break;
+                case AccountsSortState.StatusAsc:
+                    source = source.OrderBy(x => x.IsBlocked);
+                    break;
+                case AccountsSortState.StatusDesc:
+                    source = source.OrderByDescending(x => x.IsBlocked);
+                    break;
+                default:
+                    source = source.OrderBy(x => x.AccountId);
+                    break;
+            }
+
+
+
+            var count = source.Count();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize);
+            PageViewModel pageView = new PageViewModel(count, page, pageSize);
+            AdminAccountsViewModel ivm = new AdminAccountsViewModel
+            {
+                PageViewModel = pageView,
+                SortViewModel = new SortAccountsViewModel(sortOrder),
+                FilterViewModel = new FilterAccountsViewModel(card, email, account),
+                Accounts = items
+            };
+            //ViewBag.Accounts = _context.Accounts.Include(x => x.Card.User);
+            ViewBag.BlockedAccs = _context.Accounts.Where(acc => acc.IsBlocked);
+            return View("MainAdmin", ivm);
         }
     }
 }

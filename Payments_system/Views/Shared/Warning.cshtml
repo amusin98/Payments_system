@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Warning";
+}
+
+<html>
+<head>
+    <title>Payments_system</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <h3>@ViewBag.Message</h3>
+    <form asp-action="Delete" asp-controller="@ViewBag.Controller" method="post">
+        <input type="hidden" name="deletingEntity" value="@ViewBag.Entity" />
+        <input type="hidden" name="accept" value="true" />
+        <input type="submit" value="Ok" class="btn btn-success" /> 
+        <input type="button" class="btn btn-danger" value="Cancel" onclick="history.back()" />
+    </form>
+</body>
+</html>

@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Payments_system</title>
-    <script type="text/javascript" src="~/js/site.js"></script> 
+    <script type="text/javascript" src="~/js/site.js"></script>
     <script type="text/javascript" src="~/js/jquery-1.2.6.js"></script>
-    
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    
-    
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -22,18 +22,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Users" asp-action="Main" class="navbar-brand">Payments_system</a>
+                <a asp-area="" asp-controller="Users" asp-action="MainAdmin" class="navbar-brand">Payments_system</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-controller="Cards" asp-action="Create">Add card</a></li>
-                    <li><a asp-controller="Cards" asp-action="Delete">Delete card</a></li>
-                    <li><a asp-controller="Accounts" asp-action="Create">Create account</a></li>
-                    <li><a asp-controller="Accounts" asp-action="Block">Block account</a></li>
-                    <li><a asp-controller="Accounts" asp-action="Replenish">Replenish account</a></li>
-                    <li><a asp-controller="Accounts" asp-action="Delete">Delete account</a></li>
-                    <li><a asp-controller="Payments" asp-action="Pay">Make pay</a></li>
-                    <li><a asp-controller="Users" asp-action="Logout">Logout</a></li>
+                    <li><a asp-controller="Goals" asp-action="Add">Add payment goal</a></li>
+                    <li><a asp-controller="Goals" asp-action="Update">Update payment goal</a></li>
+                    <li><a asp-controller="Goals" asp-action="Delete">Delete payment goal</a></li>
                 </ul>
             </div>
         </div>
@@ -46,7 +41,7 @@
         </footer>
     </div>
 
-    
+
 
     @RenderSection("Scripts", required: false)
 </body>

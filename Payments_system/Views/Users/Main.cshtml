@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @using Newtonsoft.Json;
-@using Payments_system.Models;
-@model IEnumerable<Payment>
+@using Payments_system.ViewModels;
+@model UserPaymentsViewModel
+@addTagHelper "*, Payments_system"
 @{
     ViewData["Title"] = "Main";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,19 +11,65 @@
 
 <h2>Welcome,  @{string surname = JsonConvert.DeserializeObject<User>(Context.Session.GetString("user")).Surname;
                 @surname}</h2><br>
-<h3>All payments:</h3>
+<h3>All accounts:</h3>
+<form method="get">
+    <div class="form-inline">
+        <label class="control-label">Goal: </label>
+        @Html.TextBox("goal", Model.FilterViewModel.SelectedGoal, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Payment id: </label>
+        @Html.TextBox("payment", Model.FilterViewModel.SelectedPayment,
+                htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Account id: </label>
+        @Html.TextBox("account", Model.FilterViewModel.SelectedAccount, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Date: </label>
+        @Html.TextBox("date", Model.FilterViewModel.SelectedDate, htmlAttributes: new { @class = "form-control" })
+
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
+</form>
 <table id="myTable2" class="table table-bordered">
     <thead>
         <tr>
-            <th data-type="number" onclick="sortTable(0)">Id of payment</th>
-            <th data-type="number" onclick="sortTable(1)">Id of account</th>
-            <th data-type="date" onclick="sortTable(2)">Date</th>
-            <th data-type="number" onclick="sortTable(3)">Amount</th>
-            <th data-type="string" onclick="sortTable(4)">Goal</th>
+            <th>
+                <a asp-action="Main"
+                   asp-route-sortOrder="@(Model.SortViewModel.PaymentIdSort)"
+                   asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+                   asp-route-payment =" @(Model.FilterViewModel.SelectedPayment)"
+                   asp-route-date="@(Model.FilterViewModel.SelectedDate)">Payment Id</a>
+            </th>
+            <th>
+                <a asp-action="Main"
+                   asp-route-sortOrder="@(Model.SortViewModel.AccIdSort)"
+                   asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+                   asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
+                   asp-route-date="@(Model.FilterViewModel.SelectedDate)">Account Id</a>
+            </th>
+            <th data-type="date" ><a onclick="sortTable(2)">Date</a></th>
+            <th>
+                <a asp-action="Main"
+                   asp-route-sortOrder="@(Model.SortViewModel.AmountSort)"
+                   asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+                   asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
+                   asp-route-date="@(Model.FilterViewModel.SelectedDate)">Amount</a>
+            </th>
+            <th>
+                <a asp-action="Main"
+                   asp-route-sortOrder="@(Model.SortViewModel.GoalSort)"
+                   asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+                   asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
+                   asp-route-date="@(Model.FilterViewModel.SelectedDate)">Goal</a>
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Payments)
         {
             <tr>
                 <td>@item.PaymentId</td>
@@ -34,3 +81,32 @@
         }
     </tbody>
 </table>
+<page-link page-model="Model.PageViewModel" page-action="Main"></page-link>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Main"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+        asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+        asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+        asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
+        asp-route-date="@(Model.FilterViewModel.SelectedDate)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Main"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+      asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+        asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+        asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
+        asp-route-date="@(Model.FilterViewModel.SelectedDate)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

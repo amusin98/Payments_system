@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/Layout_admin.cshtml";
+}
+
+<h2>Update</h2>
+<form asp-controller="Goals" asp-action="Update" method="post">
+    <label>Choose goal for updating:</label>
+    <select class="form-control" name="goalOld">
+        @foreach (var item in ViewBag.Goals)
+        {
+            <option value="@item.GoalId">@item.GoalName</option>
+        }
+    </select><br>
+    <label>Input new value of this goal:</label>
+    <input type="text" name="goalNew" />
+    <input type="submit" class="btn btn-success"  value="Confirm" />
+</form>
+<br />
+
+<table class="table table-bordered">
+    <tr>
+        <th>Id of goal</th>
+        <th>Name</th>
+    </tr>
+    @foreach (var item in ViewBag.Goals)
+            {
+        <tr>
+            <td>@item.GoalId</td>
+            <td>@item.GoalName</td>
+        </tr>
+    }
+</table>

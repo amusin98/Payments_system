@@ -12,10 +12,6 @@ namespace Payments_system.Models
         public User User { get; set; }
         public double Balance { get; set; }
 
-        public ICollection<Account> Accounts { get; set; }
-        public Card()
-        {
-            Accounts = new HashSet<Account>();
-        }
+        public Account Account { get; set; }
     }
 }

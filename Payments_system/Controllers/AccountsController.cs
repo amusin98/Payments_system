@@ -27,8 +27,9 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "user")]
         public IActionResult Create()
         {
-            var cards =  _context.Cards.Include(x => x.Accounts).Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
-            ViewBag.FreeCards = _context.Cards.Include(x => x.Accounts).Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId && card.Accounts.Count == 0);
+            //var cards = _context.Cards.Include(x => x.Account).Where(x => x.Account == null);
+            var cards =  _context.Cards.Include(x => x.Account).Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+            ViewBag.FreeCards = _context.Cards.Include(x => x.Account).Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId && card.Account == null);
             return View(cards);
         }
 
@@ -119,7 +120,36 @@ namespace Payments_system.Controllers
             _context.SaveChanges();
             ViewBag.Accounts = _context.Accounts.Include(x => x.Card.User);
             ViewBag.BlockedAccs = _context.Accounts.Where(acc => acc.IsBlocked);
-            return View("~/Views/Users/MainAdmin.cshtml");
+            return RedirectToAction("MainAdmin", "Users");
+        }
+
+        //Method for deleting account(loading form)
+        [HttpGet]
+        [Authorize(Roles = "user")]
+        public IActionResult Delete()
+        {
+            ViewBag.Accounts = _context.Accounts.Where(x => x.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+            return View();
+        }
+
+        //Method for deleting account
+        [HttpPost]
+        [Authorize(Roles = "user")]
+        public IActionResult Delete(int deletingEntity, bool accept = false)
+        {
+            if (_context.Accounts.Include(x => x.Payments).FirstOrDefault(x => x.AccountId == deletingEntity).Payments.Count == 0 || accept)
+            {
+                _context.Accounts.Remove(_context.Accounts.FirstOrDefault(x => x.AccountId == deletingEntity));
+                _context.SaveChanges();
+                return RedirectToAction("Main", "Users");
+            }
+            else
+            {
+                ViewBag.Controller = "Accounts";
+                ViewBag.Entity = deletingEntity;
+                ViewBag.Message = "Are you sure that you want delete this account? Information about payments linked with this account will be lost!";
+                return View("Warning");
+            }
         }
     }
 }

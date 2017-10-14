@@ -1,7 +1,10 @@
-﻿
+﻿@using Payments_system.Models;
+
+@model AdminAccountsViewModel
+@addTagHelper "*, Payments_system"
 @{
     ViewData["Title"] = "MainAdmin";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/Layout_admin.cshtml";
 }
 <html>
 <head>
@@ -24,15 +27,61 @@
         <input type="button" class="btn btn-success" value="Logout" onclick="location.href='@Url.Action("Logout", "Users")'" />
     </form>
     <h3>All accounts:</h3>
+    <form method="get">
+        <div class="form-inline">
+            <label class="control-label">Email: </label>
+            @Html.TextBox("email", Model.FilterViewModel.SelectedEmail, htmlAttributes: new { @class = "form-control" })
+
+            <label class="control-label">Card id: </label>
+            @Html.TextBox("card", Model.FilterViewModel.SelectedCard,
+                htmlAttributes: new { @class = "form-control" })
+
+            <label class="control-label">Account id: </label>
+            @Html.TextBox("account", Model.FilterViewModel.SelectedAccount, htmlAttributes: new { @class = "form-control" })
+
+            <input type="submit" value="Filter" class="btn btn-default" />
+        </div>
+    </form>
     <table id="myTable2" class="table table-bordered">
         <tr>
-            <th data-type="number" onclick="sortTable(0)">Id of account</th>
-            <th data-type="number" onclick="sortTable(1)">Id of card</th>
-            <th data-type="string" onclick="sortTable(2)">User email</th>
-            <th data-type="number" onclick="sortTable(3)">Balance</th>
-            <th data-type="string" onclick="sortTable(4)">Blocked</th>
+            <th>
+                <a asp-action="MainAdmin"
+                   asp-route-sortOrder="@(Model.SortViewModel.AccIdSort)"
+                   asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+                   asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Account Id</a>
+            </th>
+            <th>
+                <a asp-action="MainAdmin"
+                   asp-route-sortOrder="@(Model.SortViewModel.CardIdSort)"
+                   asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+                   asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Card Id</a>
+            </th>
+            <th>
+                <a asp-action="MainAdmin"
+                   asp-route-sortOrder="@(Model.SortViewModel.EmailSort)"
+                   asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+                   asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)">User email</a>
+            </th>
+            <th>
+                <a asp-action="MainAdmin"
+                   asp-route-sortOrder="@(Model.SortViewModel.BalanceSort)"
+                   asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+                   asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Balance</a>
+            </th>
+            <th>
+                <a asp-action="MainAdmin"
+                   asp-route-sortOrder="@(Model.SortViewModel.StatusSort)"
+                   asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+                   asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Status</a>
+            </th>
+
         </tr>
-        @foreach (var item in ViewBag.Accounts)
+        @foreach (var item in Model.Accounts)
         {
             <tr>
                 <td>@item.AccountId</td>
@@ -43,5 +92,32 @@
             </tr>
         }
     </table>
+    <page-link page-model="Model.PageViewModel" page-action="MainAdmin"></page-link>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="MainAdmin"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+           asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+           asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-default btn">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="MainAdmin"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
+           asp-route-card="@(Model.FilterViewModel.SelectedCard)"
+           asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-default btn">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
 </body>
 </html>

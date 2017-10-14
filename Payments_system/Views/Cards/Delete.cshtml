@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<form asp-controller="Cards" asp-action="Delete" method="post">
+    <label>Choose card for deleting:</label>
+    <select class="form-control" name="deletingEntity">
+        @foreach (var item in ViewBag.Cards)
+        {
+            <option value="@item.CardId">@item.CardId</option>
+        }
+    </select><br>
+    <input type="submit" class="btn btn-success" value="Confirm" />
+</form>
+<br />
+
+<table class="table table-bordered">
+    <tr>
+        <th>Id of card</th>
+        <th>Balance</th>
+    </tr>
+    @foreach (var item in ViewBag.Cards)
+            {
+        <tr>
+            <td>@item.CardId</td>
+            <td>@item.Balance</td>
+        </tr>
+    }
+</table>
