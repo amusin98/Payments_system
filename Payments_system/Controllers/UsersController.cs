@@ -85,7 +85,7 @@ namespace Payments_system.Controllers
             if (user != null)
             {
                 Authentificate(user);
-                HttpContext.Session.SetString("user", JsonConvert.SerializeObject(user));
+                //HttpContext.Session.SetString("user", JsonConvert.SerializeObject(user));
                 if (user.IsAdmin)
                 {
                     return RedirectToAction("MainAdmin","Users");
@@ -107,7 +107,7 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "admin, user")]
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
+           // HttpContext.Session.Clear();
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View("Index");
         }
@@ -119,7 +119,7 @@ namespace Payments_system.Controllers
         public IActionResult Main(int? payment, string goal, int? account, string date, int page = 1, PaymentsSortState sortOrder = PaymentsSortState.PaymentIdAsc)
         {
             int pageSize = 5;
-            IQueryable<Payment> source = _context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+            IQueryable<Payment> source = _context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.User.Email == User.Identity.Name);
 
             if (payment != null && payment != 0)
             {
@@ -131,11 +131,11 @@ namespace Payments_system.Controllers
             }
             if (goal != null)
             {
-                source = source.Where(x => x.Goal.GoalName == goal);
+                source = source.Where(x => x.Goal.GoalName.Contains(goal));
             }
             if (date != null)
             {
-                source = source.Where(x => x.Date == date);
+                source = source.Where(x => x.Date.Contains(date));
             }
 
             switch (sortOrder)
@@ -181,6 +181,7 @@ namespace Payments_system.Controllers
                 FilterViewModel = new FilterPaymentsViewModel(goal, date, account, payment),
                 Payments = items
             };
+            ViewBag.User = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).Surname;
             return View("Main", ivm);
         }
 
@@ -203,7 +204,7 @@ namespace Payments_system.Controllers
             }
             if (email != null)
             {
-                source = source.Where(x => x.Card.User.Email == email);
+                source = source.Where(x => x.Card.User.Email.Contains(email));
             }
 
             switch (sortOrder)
@@ -255,7 +256,6 @@ namespace Payments_system.Controllers
                 FilterViewModel = new FilterAccountsViewModel(card, email, account),
                 Accounts = items
             };
-            //ViewBag.Accounts = _context.Accounts.Include(x => x.Card.User);
             ViewBag.BlockedAccs = _context.Accounts.Where(acc => acc.IsBlocked);
             return View("MainAdmin", ivm);
         }

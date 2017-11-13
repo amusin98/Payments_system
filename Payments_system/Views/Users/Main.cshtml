@@ -9,8 +9,7 @@
 
 }
 
-<h2>Welcome,  @{string surname = JsonConvert.DeserializeObject<User>(Context.Session.GetString("user")).Surname;
-                @surname}</h2><br>
+<h2>Welcome,  @ViewBag.User</h2><br>
 <h3>All accounts:</h3>
 <form method="get">
     <div class="form-inline">

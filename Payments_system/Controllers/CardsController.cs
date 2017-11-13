@@ -9,6 +9,7 @@ using Payments_system.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Payments_system.ViewModels;
 
 namespace Payments_system.Controllers
 {
@@ -34,7 +35,7 @@ namespace Payments_system.Controllers
         [HttpPost]
         public IActionResult Create(double balance)
         {
-            _context.Cards.Add(new Card { Balance = balance, UserId = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId });
+            _context.Cards.Add(new Card { Balance = balance, UserId = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserId});
             _context.SaveChanges();
             return RedirectToAction("Main", "Users");
         }
@@ -43,7 +44,7 @@ namespace Payments_system.Controllers
         [HttpGet]
         public IActionResult Delete()
         {
-            ViewBag.Cards = _context.Cards.Where(x => x.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+            ViewBag.Cards = _context.Cards.Include(x => x.User).Where(x => x.User.Email == User.Identity.Name);
             return View();
         }
 
@@ -59,10 +60,8 @@ namespace Payments_system.Controllers
             }
             else
             {
-                ViewBag.Controller = "Cards";
-                ViewBag.Entity = deletingEntity;
-                ViewBag.Message = "Are you sure that you want delete this card? Information about accounts and payments linked with this card will be lost!";
-                return View("Warning");
+                WarningViewModel wvm = new WarningViewModel { Controller = "Cards", Entity = deletingEntity, Message = "Are you sure that you want delete this card? Information about accounts and payments linked with this card will be lost!" };
+                return View("Warning", wvm);
             }
         }
     }

@@ -9,6 +9,7 @@ using Payments_system.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Payments_system.ViewModels;
 
 namespace Payments_system.Controllers
 {
@@ -27,10 +28,8 @@ namespace Payments_system.Controllers
         [HttpGet]
         public IActionResult Pay()
         {
-            ViewBag.Goals = _context.Goals;
-            ViewBag.Cards = _context.Cards.Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
-            ViewBag.Accounts = _context.Accounts.Where(acc => acc.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
-            return View();
+            MakePayViewModel mpvm = new MakePayViewModel { Goals = _context.Goals, Cards = _context.Cards.Include(x => x.User).Where(card => card.User.Email == User.Identity.Name), Accounts = _context.Accounts.Include(x => x.Card.User).Where(acc => acc.Card.User.Email == User.Identity.Name) };
+            return View(mpvm);
         }
 
         //Method for pay

@@ -33,7 +33,8 @@ namespace Payments_system.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.HasIndex("CardId");
+                    b.HasIndex("CardId")
+                        .IsUnique();
 
                     b.ToTable("Accounts");
                 });
@@ -111,15 +112,15 @@ namespace Payments_system.Migrations
             modelBuilder.Entity("Payments_system.Models.Account", b =>
                 {
                     b.HasOne("Payments_system.Models.Card", "Card")
-                        .WithMany()
-                        .HasForeignKey("CardId")
+                        .WithOne("Account")
+                        .HasForeignKey("Payments_system.Models.Account", "CardId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Payments_system.Models.Card", b =>
                 {
                     b.HasOne("Payments_system.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Cards")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -127,12 +128,12 @@ namespace Payments_system.Migrations
             modelBuilder.Entity("Payments_system.Models.Payment", b =>
                 {
                     b.HasOne("Payments_system.Models.Account", "Account")
-                        .WithMany()
+                        .WithMany("Payments")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Payments_system.Models.Goal", "Goal")
-                        .WithMany()
+                        .WithMany("Payments")
                         .HasForeignKey("GoalId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

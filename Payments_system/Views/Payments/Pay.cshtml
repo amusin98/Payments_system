@@ -1,4 +1,5 @@
-﻿
+﻿@using Payments_system.ViewModels;
+@model MakePayViewModel
 @{
     ViewData["Title"] = "Pay";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,14 +9,14 @@
 <form asp-controller="Payments" asp-action="Pay" method="post">
     <label>Choose goal of pay: </label>
     <select class="form-control" name="goal">
-        @foreach (var item in ViewBag.Goals)
+        @foreach (var item in Model.Goals)
         {
             <option value="@item.GoalId">@item.GoalName</option>
         }
     </select><br>
     <label>Choose account for pay: </label>
     <select class="form-control" name="account">
-        @foreach (var item in ViewBag.Accounts)
+        @foreach (var item in Model.Accounts)
         {
             <option value="@item.AccountId">@item.AccountId</option>
         }
@@ -34,7 +35,7 @@
             <th>Blocked</th>
         </tr>
     </thead>
-    @foreach (var item in ViewBag.Accounts)
+    @foreach (var item in Model.Accounts)
             {
         <tr>
             <td>@item.AccountId</td>
@@ -50,7 +51,7 @@
         <th>Id of card</th>
         <th>Balance</th>
     </tr>
-    @foreach (var item in ViewBag.Cards)
+    @foreach (var item in Model.Cards)
             {
         <tr>
             <td>@item.CardId</td>

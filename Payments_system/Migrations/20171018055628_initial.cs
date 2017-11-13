@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Payments_system.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -111,7 +111,8 @@ namespace Payments_system.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_CardId",
                 table: "Accounts",
-                column: "CardId");
+                column: "CardId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cards_UserId",

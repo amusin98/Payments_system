@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Payments_system.Models;
 using Microsoft.AspNetCore.Authorization;
+using Payments_system.ViewModels;
 
 namespace Payments_system.Controllers
 {
@@ -92,10 +93,8 @@ namespace Payments_system.Controllers
             }
             else
             {
-                ViewBag.Message = "This goal used for some payments, are you sure that you want delete it? You will some information about pays.";
-                ViewBag.Entity = deletingEntity;
-                ViewBag.Controller = "Goals";
-                return View("Warning");
+                WarningViewModel wvm = new WarningViewModel { Controller = "Goals", Entity = deletingEntity, Message = "This goal used for some payments, are you sure that you want delete it? You will some information about pays." };
+                return View("Warning", wvm);
             }
         }
 

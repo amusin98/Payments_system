@@ -9,6 +9,7 @@ using Payments_system.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Payments_system.ViewModels;
 
 namespace Payments_system.Controllers
 {
@@ -27,9 +28,8 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "user")]
         public IActionResult Create()
         {
-            //var cards = _context.Cards.Include(x => x.Account).Where(x => x.Account == null);
-            var cards =  _context.Cards.Include(x => x.Account).Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
-            ViewBag.FreeCards = _context.Cards.Include(x => x.Account).Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId && card.Account == null);
+            var cards =  _context.Cards.Include(x => x.Account).Include(x => x.User).Where(card => card.User.Email == User.Identity.Name);
+            ViewBag.FreeCards = _context.Cards.Include(x => x.Account).Include(x => x.User).Where(card => card.User.Email == User.Identity.Name && card.Account == null);
             return View(cards);
         }
 
@@ -48,8 +48,8 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "user")]
         public IActionResult Block()
         {
-            var accounts = _context.Accounts.Where(acc => acc.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
-            ViewBag.UnBlockedAccounts = _context.Accounts.Where(acc => acc.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId && acc.IsBlocked == false);
+            var accounts = _context.Accounts.Include(x => x.Card.User).Where(acc => acc.Card.User.Email == User.Identity.Name);
+            ViewBag.UnBlockedAccounts = _context.Accounts.Include(x => x.Card.User).Where(acc => acc.Card.User.Email == User.Identity.Name && acc.IsBlocked == false);
             return View(accounts);
         }
 
@@ -68,8 +68,8 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "user")]
         public IActionResult Replenish()
         {
-            ViewBag.Accounts = _context.Accounts.Where(acc => acc.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
-            ViewBag.Cards = _context.Cards.Where(card => card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+            ViewBag.Accounts = _context.Accounts.Include(x => x.Card.User).Where(acc => acc.Card.User.Email == User.Identity.Name);
+            ViewBag.Cards = _context.Cards.Include(x => x.User).Where(card => card.User.Email == User.Identity.Name);
             return View();
         }
 
@@ -128,7 +128,7 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "user")]
         public IActionResult Delete()
         {
-            ViewBag.Accounts = _context.Accounts.Where(x => x.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId);
+            ViewBag.Accounts = _context.Accounts.Include(x => x.Card.User).Where(x => x.Card.User.Email == User.Identity.Name);
             return View();
         }
 
@@ -145,10 +145,8 @@ namespace Payments_system.Controllers
             }
             else
             {
-                ViewBag.Controller = "Accounts";
-                ViewBag.Entity = deletingEntity;
-                ViewBag.Message = "Are you sure that you want delete this account? Information about payments linked with this account will be lost!";
-                return View("Warning");
+                WarningViewModel wvm = new WarningViewModel { Controller = "Accounts", Entity = deletingEntity, Message = "Are you sure that you want delete this account? Information about payments linked with this account will be lost!" };
+                return View("Warning", wvm);
             }
         }
     }

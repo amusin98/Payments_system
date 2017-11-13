@@ -8,8 +8,10 @@ namespace Payments_system.Models
     public class Account
     {
         public int AccountId { get; set; }
+
         public int CardId { get; set; }
         public Card Card { get; set; }
+
         public bool IsBlocked { get; set; }
         public double Balance { get; set; }
 

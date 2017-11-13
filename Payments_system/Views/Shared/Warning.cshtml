@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Payments_system.ViewModels;
+@model WarningViewModel
+@{
     ViewData["Title"] = "Warning";
 }
 
@@ -9,9 +11,9 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <h3>@ViewBag.Message</h3>
-    <form asp-action="Delete" asp-controller="@ViewBag.Controller" method="post">
-        <input type="hidden" name="deletingEntity" value="@ViewBag.Entity" />
+    <h3>@Model.Message</h3>
+    <form asp-action="Delete" asp-controller="@Model.Controller" method="post">
+        <input type="hidden" name="deletingEntity" value="@Model.Entity" />
         <input type="hidden" name="accept" value="true" />
         <input type="submit" value="Ok" class="btn btn-success" /> 
         <input type="button" class="btn btn-danger" value="Cancel" onclick="history.back()" />
