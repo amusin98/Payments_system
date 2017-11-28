@@ -36,33 +36,42 @@ namespace Payments_system.Controllers
         [HttpPost]
         public IActionResult Pay(int goal, int account, double amount)
         {
-            var currentAcc = _context.Accounts.FirstOrDefault(acc => acc.AccountId == account);
-            if (!currentAcc.IsBlocked)
+            if (amount > 0)
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                var currentAcc = _context.Accounts.FirstOrDefault(acc => acc.AccountId == account);
+                if (!currentAcc.IsBlocked)
                 {
-                    currentAcc.Balance -= amount;
-                    if (currentAcc.Balance >= 0)
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        _context.Cards.FirstOrDefault(card => card.CardId == currentAcc.CardId).Balance -= amount;
-                        _context.Payments.Add(new Payment { AccountId = currentAcc.AccountId, Amount = amount, Date = DateTime.Now.ToShortDateString(), GoalId = goal});
-                        _context.SaveChanges();
-                        transaction.Commit();
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                        ViewBag.Message = "You cant make payment from this account! No resources.";
-                        return View("Error");
+                        currentAcc.Balance -= amount;
+                        if (currentAcc.Balance >= 0)
+                        {
+                            _context.Cards.FirstOrDefault(card => card.CardId == currentAcc.CardId).Balance -= amount;
+                            _context.Payments.Add(new Payment { AccountId = currentAcc.AccountId, Amount = amount, Date = DateTime.Now.ToShortDateString(), GoalId = goal });
+                            _context.SaveChanges();
+                            transaction.Commit();
+                        }
+                        else
+                        {
+                            transaction.Rollback();
+                            ViewBag.Message = "You cant make payment from this account! No resources.";
+                            return View("Error");
+                        }
                     }
                 }
+                else
+                {
+                    ViewBag.Message = "This account is blocked, operation unavailable!";
+                    return View("Error");
+                }
+                return RedirectToAction("Main", "Users");
             }
             else
             {
-                ViewBag.Message = "This account is blocked, operation unavailable!";
+                ViewBag.Message = "Incorrect payment amount!!!";
                 return View("Error");
             }
-            return RedirectToAction("Main", "Users");
+            
         }
     }
 }

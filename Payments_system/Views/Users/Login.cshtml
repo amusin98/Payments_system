@@ -1,25 +1,17 @@
 ﻿
 @{
     ViewData["Title"] = "Login";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
-    
+    Layout = "~/Views/Shared/Layout_start.cshtml";
+
 }
-<html>
-<head>
-    <title>Payments_system</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <h2>Login page</h2>
-    <form method="post" action="~/Users/Login">
-        <label>Login: </label>
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input class="form-control" type="text" name="login" />
-        <label>Password: </label>
-        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-        <input type="password" class="form-control" name="password" />
-        <input type="submit" class="btn btn-success" value="Login" />
-    </form>
-    </body>
-</html>
+
+<h2>Login page</h2>
+<form method="post" asp-controller="Users" asp-action="Login">
+    <label>Login: </label>
+    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+    <input class="form-control" type="text" name="login" />
+    <label>Password: </label>
+    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+    <input type="password" class="form-control" name="password" />
+    <input type="submit" class="btn btn-success" value="Login" />
+</form>

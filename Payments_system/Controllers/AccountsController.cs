@@ -78,37 +78,46 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "user")]
         public IActionResult Replenish(int account, int card, double amount)
         {
-            if (!(_context.Accounts.FirstOrDefault(acc => acc.AccountId == account).CardId == card))
+            if (amount > 0)
             {
-                var CurrentCard = _context.Cards.FirstOrDefault(c => c.CardId == card);
-                using (var transaction = _context.Database.BeginTransaction())
+                if (!(_context.Accounts.FirstOrDefault(acc => acc.AccountId == account).CardId == card))
                 {
-                    CurrentCard.Balance -= amount;
-                    if (CurrentCard.Balance >= 0)
+                    var CurrentCard = _context.Cards.FirstOrDefault(c => c.CardId == card);
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        _context.Accounts.FirstOrDefault(acc => acc.AccountId == account).Balance += amount;
-                        if (!(_context.Accounts.Where(acc => acc.CardId == card).Count() == 0))
+                        CurrentCard.Balance -= amount;
+                        if (CurrentCard.Balance >= 0)
                         {
-                            _context.Accounts.FirstOrDefault(acc => acc.CardId == card).Balance -= amount;
+                            _context.Accounts.FirstOrDefault(acc => acc.AccountId == account).Balance += amount;
+                            if (!(_context.Accounts.Where(acc => acc.CardId == card).Count() == 0))
+                            {
+                                _context.Accounts.FirstOrDefault(acc => acc.CardId == card).Balance -= amount;
+                            }
+
+                            _context.SaveChanges();
+                            transaction.Commit();
                         }
-                        
-                        _context.SaveChanges();
-                        transaction.Commit();
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                        ViewBag.Message = "You haven't resources for this operation!";
-                        return View("Error");
+                        else
+                        {
+                            transaction.Rollback();
+                            ViewBag.Message = "You haven't resources for this operation!";
+                            return View("Error");
+                        }
                     }
                 }
+                else
+                {
+                    ViewBag.Message = "You cant replenish account from this card! It is card binded to this account.";
+                    return View("Error");
+                }
+                return RedirectToAction("Main", "Users");
             }
             else
             {
-                ViewBag.Message = "You cant replenish account from this card! It is card binded to this account.";
+                ViewBag.Message = "Incorrect amount for replenish!";
                 return View("Error");
             }
-            return RedirectToAction("Main", "Users");
+            
         }
 
         //Method for unblocking account(for admin)

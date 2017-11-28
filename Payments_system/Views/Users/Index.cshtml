@@ -1,20 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/Layout_start.cshtml";
 }
 
-<html>
-<head>
-    <title>Payments_system</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>  
-    <h3 style="margin-left:43%">@ViewData["Title"]</h3>
-    <button type="button" class="btn btn-success" id="button" onclick="location.href='@Url.Action("Login", "Users")'">
-        Login
-    </button><br><br><br>
-    <button type="button" class="btn btn-success" id="button" onclick="location.href='@Url.Action("Registration", "Users")'">
-        Registration
-    </button>
-</body>
-</html>
+<h3 style="margin-left:43%">@ViewData["Title"]</h3>
+<button type="button" class="btn btn-success" id="button" onclick="location.href='@Url.Action("Login", "Users")'">
+    Login
+</button>
+<br>
+<br>
+<br>
+<button type="button" class="btn btn-success" id="button" onclick="location.href='@Url.Action("Registration", "Users")'">
+    Registration
+</button>

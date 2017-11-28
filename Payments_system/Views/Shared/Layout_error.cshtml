@@ -16,16 +16,9 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a asp-area="" asp-controller="Users" asp-action="MainAdmin" class="navbar-brand">Payments_system</a>
+                <a onclick="location=history.back()" class="navbar-brand">Back</a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-controller="Goals" asp-action="Add">Add payment goal</a></li>
-                    <li><a asp-controller="Goals" asp-action="Update">Update payment goal</a></li>
-                    <li><a asp-controller="Goals" asp-action="Delete">Delete payment goal</a></li>
-                    <li><a asp-controller="Users" asp-action="Logout">Logout</a></li>
-                </ul>
-            </div>
+            
         </div>
     </nav>
     <div class="container body-content">
@@ -41,3 +34,4 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+

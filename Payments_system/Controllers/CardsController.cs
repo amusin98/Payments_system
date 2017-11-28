@@ -35,9 +35,18 @@ namespace Payments_system.Controllers
         [HttpPost]
         public IActionResult Create(double balance)
         {
-            _context.Cards.Add(new Card { Balance = balance, UserId = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserId});
-            _context.SaveChanges();
-            return RedirectToAction("Main", "Users");
+            if (balance > 0)
+            {
+                _context.Cards.Add(new Card { Balance = balance, UserId = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserId });
+                _context.SaveChanges();
+                return RedirectToAction("Main", "Users");
+            }
+            else
+            {
+                ViewBag.Message = "Balance cannot be negative or zero!";
+                return View("Error");
+            }
+            
         }
 
         //Method for deleting card(loading form)

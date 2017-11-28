@@ -87,20 +87,3 @@ function sortTable(n) {
     }
 }
 
-function hello() {
-    $.ajax({
-        type: "post",
-        URL: '@Url.Action("Ajax","Users")',
-        
-        data: "{login: '" + document.forms["form1"]["login"].value + "'}",
-        success: function (msg) {
-            console.log(msg);
-            alert(msg);
-        }
-    });
-}
-
-function sort(n) {
-    
-}
-
