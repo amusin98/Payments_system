@@ -36,7 +36,7 @@ namespace Payments_system.Controllers
         [HttpPost]
         public IActionResult Pay(int goal, int account, double amount)
         {
-            if (amount > 0)
+            if (amount >  0)
             {
                 var currentAcc = _context.Accounts.FirstOrDefault(acc => acc.AccountId == account);
                 if (!currentAcc.IsBlocked)
