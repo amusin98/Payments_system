@@ -85,7 +85,6 @@ namespace Payments_system.Controllers
             if (user != null)
             {
                 Authentificate(user);
-                //HttpContext.Session.SetString("user", JsonConvert.SerializeObject(user));
                 if (user.IsAdmin)
                 {
                     return RedirectToAction("MainAdmin","Users");
@@ -93,7 +92,6 @@ namespace Payments_system.Controllers
                 else
                 {
                     return RedirectToAction("Main", "Users");
-                    //return View("Main", _context.Payments.Include(x => x.Goal).Include(x => x.Account.Card.User).Where(pay => pay.Account.Card.UserId == JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("user")).UserId));
                 }
             }
             else
@@ -107,7 +105,6 @@ namespace Payments_system.Controllers
         [Authorize(Roles = "admin, user")]
         public IActionResult Logout()
         {
-           // HttpContext.Session.Clear();
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View("Index");
         }
@@ -164,6 +161,12 @@ namespace Payments_system.Controllers
                 case PaymentsSortState.AmountDesc:
                     source = source.OrderByDescending(x => x.Amount);
                     break;
+                case PaymentsSortState.DateAsc:
+                    source = source.OrderBy(x => DateTime.Parse(x.Date).Date);
+                    break;
+                case PaymentsSortState.DateDesc:
+                    source = source.OrderByDescending(x => DateTime.Parse(x.Date).Date);
+                    break;
                 default:
                     source = source.OrderBy(x => x.PaymentId);
                     break;
@@ -181,7 +184,7 @@ namespace Payments_system.Controllers
                 FilterViewModel = new FilterPaymentsViewModel(goal, date, account, payment),
                 Payments = items
             };
-            ViewBag.User = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).Surname;
+            ViewBag.User = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).Name;
             return View("Main", ivm);
         }
 
@@ -257,6 +260,7 @@ namespace Payments_system.Controllers
                 Accounts = items
             };
             ViewBag.BlockedAccs = _context.Accounts.Where(acc => acc.IsBlocked);
+            ViewBag.User = _context.Users.FirstOrDefault(x => x.Email == User.Identity.Name).Name;
             return View("MainAdmin", ivm);
         }
     }

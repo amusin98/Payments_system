@@ -13,6 +13,7 @@ namespace Payments_system.ViewModels
         public PaymentsSortState PaymentIdSort { get; private set; }
         public PaymentsSortState GoalSort { get; private set; }
         public PaymentsSortState AmountSort { get; private set; }
+        public PaymentsSortState DateSort { get; private set; }
         public PaymentsSortState Current { get; private set; }
 
         public SortPaymentsViewModel(PaymentsSortState sortOrder)
@@ -21,6 +22,7 @@ namespace Payments_system.ViewModels
             PaymentIdSort = sortOrder == PaymentsSortState.PaymentIdAsc ? PaymentsSortState.PaymentIdDesc : PaymentsSortState.PaymentIdAsc;
             GoalSort = sortOrder == PaymentsSortState.GoalAsc ? PaymentsSortState.GoalDesc : PaymentsSortState.GoalAsc;
             AmountSort = sortOrder == PaymentsSortState.AmountAsc ? PaymentsSortState.AmountDesc : PaymentsSortState.AmountAsc;
+            DateSort = sortOrder == PaymentsSortState.DateAsc ? PaymentsSortState.DateDesc : PaymentsSortState.DateAsc;
             Current = sortOrder;
         }
     }

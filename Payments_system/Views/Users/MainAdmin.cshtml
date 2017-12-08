@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/Layout_admin.cshtml";
 }
 
-<h2>MainAdmin</h2>
+<h2>Welcome,  @ViewBag.User</h2><br>
 <form asp-controller="Accounts" asp-action="Unblock" method="post">
     <label>Choose account: </label>
     <select name="account" class="form-control">
@@ -37,35 +37,35 @@
 <table id="myTable2" class="table table-bordered">
     <tr>
         <th>
-            <a asp-action="MainAdmin"
+            <a style="color:white" asp-action="MainAdmin"
                 asp-route-sortOrder="@(Model.SortViewModel.AccIdSort)"
                 asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
                 asp-route-card="@(Model.FilterViewModel.SelectedCard)"
                 asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Account Id</a>
         </th>
         <th>
-            <a asp-action="MainAdmin"
+            <a style="color:white" asp-action="MainAdmin"
                 asp-route-sortOrder="@(Model.SortViewModel.CardIdSort)"
                 asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
                 asp-route-card="@(Model.FilterViewModel.SelectedCard)"
                 asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Card Id</a>
         </th>
         <th>
-            <a asp-action="MainAdmin"
+            <a style="color:white" asp-action="MainAdmin"
                 asp-route-sortOrder="@(Model.SortViewModel.EmailSort)"
                 asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
                 asp-route-card="@(Model.FilterViewModel.SelectedCard)"
                 asp-route-account="@(Model.FilterViewModel.SelectedAccount)">User email</a>
         </th>
         <th>
-            <a asp-action="MainAdmin"
+            <a style="color:white" asp-action="MainAdmin"
                 asp-route-sortOrder="@(Model.SortViewModel.BalanceSort)"
                 asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
                 asp-route-card="@(Model.FilterViewModel.SelectedCard)"
                 asp-route-account="@(Model.FilterViewModel.SelectedAccount)">Balance</a>
         </th>
         <th>
-            <a asp-action="MainAdmin"
+            <a style="color:white" asp-action="MainAdmin"
                 asp-route-sortOrder="@(Model.SortViewModel.StatusSort)"
                 asp-route-email="@(Model.FilterViewModel.SelectedEmail)"
                 asp-route-card="@(Model.FilterViewModel.SelectedCard)"
@@ -84,7 +84,6 @@
         </tr>
     }
 </table>
-<page-link page-model="Model.PageViewModel" page-action="MainAdmin"></page-link>
 @if (Model.PageViewModel.HasPreviousPage)
 {
     <a asp-action="MainAdmin"

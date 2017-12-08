@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/Layout_admin.cshtml";
 }
 
-<h2>Update</h2>
+<h2>Update goal</h2>
 <form asp-controller="Goals" asp-action="Update" method="post">
     <label>Choose goal for updating:</label>
     <select class="form-control" name="goalOld">
@@ -14,7 +14,7 @@
         }
     </select><br>
     <label>Input new value of this goal:</label>
-    <input type="text" name="goalNew" />
+    <input type="text" name="goalNew" required/>
     <input type="submit" class="btn btn-success"  value="Confirm" />
 </form>
 <br />

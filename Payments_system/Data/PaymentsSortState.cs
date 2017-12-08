@@ -14,6 +14,8 @@ namespace Payments_system.Models
         AmountAsc,
         AmountDesc,
         GoalAsc,
-        GoalDesc
+        GoalDesc,
+        DateAsc,
+        DateDesc
     }
 }

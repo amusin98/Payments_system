@@ -255,7 +255,7 @@ namespace Payments_system
                     });
                 context.SaveChanges();
             }
-            double[] balances = new Double[305];
+            double[] balances = new Double[1300];
             for (int i = 0; i < balances.Length; i++)
             {
                 balances[i] = new Random().Next(20, 250);
@@ -264,7 +264,7 @@ namespace Payments_system
             {
                 for (int i = 1, k = 0; i <= 30; i++)
                 {
-                    for (int j = 0; j < 10; j++, k++)
+                    for (int j = 0; j < 35; j++, k++)
                     {
                         context.Cards.Add(new Card { UserId = i, Balance = balances[k] });
                     }
@@ -274,7 +274,7 @@ namespace Payments_system
             }
             if (!context.Accounts.Any())
             {
-                for (int i = 1, j = 0; i <= 300; i++, j++)
+                for (int i = 1, j = 0; i <= 1000; i++, j++)
                 {
                     context.Accounts.Add(new Account { CardId = i, IsBlocked = false, Balance = balances[j] });
                 }
@@ -408,9 +408,9 @@ namespace Payments_system
             }
             if (!context.Payments.Any())
             {
-                    for (int i = 1; i <= 300; i++)
+                    for (int i = 1; i <= 1000; i++)
                     {
-                        context.Payments.Add(new Payment { AccountId = new Random().Next(1,300), GoalId = new Random().Next(1,30), Date = "01/01/201" + new Random().Next(1,9), Amount = new Random().Next(10,150)});
+                        context.Payments.Add(new Payment { AccountId = new Random().Next(1,1000), GoalId = new Random().Next(1,30), Date = "01/01/201" + new Random().Next(1,9), Amount = new Random().Next(10,150)});
                     }
                 context.SaveChanges();
             }

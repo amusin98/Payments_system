@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http;
-@using Newtonsoft.Json;
-@using Payments_system.ViewModels;
+﻿@using Payments_system.ViewModels;
 @model UserPaymentsViewModel
 @addTagHelper "*, Payments_system"
 @{
@@ -33,7 +31,7 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Main"
+                <a style="color:white" asp-action="Main"
                    asp-route-sortOrder="@(Model.SortViewModel.PaymentIdSort)"
                    asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
                    asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
@@ -41,16 +39,24 @@
                    asp-route-date="@(Model.FilterViewModel.SelectedDate)">Payment Id</a>
             </th>
             <th>
-                <a asp-action="Main"
+                <a style="color:white" asp-action="Main"
                    asp-route-sortOrder="@(Model.SortViewModel.AccIdSort)"
                    asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
                    asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
                    asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
                    asp-route-date="@(Model.FilterViewModel.SelectedDate)">Account Id</a>
             </th>
-            <th data-type="date" ><a onclick="sortTable(2)">Date</a></th>
             <th>
-                <a asp-action="Main"
+                <a style="color:white" asp-action="Main"
+                   asp-route-sortOrder="@(Model.SortViewModel.DateSort)"
+                   asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
+                   asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
+                   asp-route-payment=" @(Model.FilterViewModel.SelectedPayment)"
+                   asp-route-date="@(Model.FilterViewModel.SelectedDate)">Date</a>
+            </th>
+            <!--<th style="color:white" data-type="date" ><a onclick="sortTable(2)">Date</a></th>-->
+            <th>
+                <a style="color:white" asp-action="Main"
                    asp-route-sortOrder="@(Model.SortViewModel.AmountSort)"
                    asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
                    asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
@@ -58,7 +64,7 @@
                    asp-route-date="@(Model.FilterViewModel.SelectedDate)">Amount</a>
             </th>
             <th>
-                <a asp-action="Main"
+                <a style="color:white" asp-action="Main"
                    asp-route-sortOrder="@(Model.SortViewModel.GoalSort)"
                    asp-route-goal="@(Model.FilterViewModel.SelectedGoal)"
                    asp-route-account="@(Model.FilterViewModel.SelectedAccount)"
@@ -80,7 +86,6 @@
         }
     </tbody>
 </table>
-<page-link page-model="Model.PageViewModel" page-action="Main"></page-link>
 @if (Model.PageViewModel.HasPreviousPage)
 {
     <a asp-action="Main"
@@ -92,7 +97,7 @@
        asp-route-sortorder="@(Model.SortViewModel.Current)"
        class="btn btn-default btn">
         <i class="glyphicon glyphicon-chevron-left"></i>
-        Назад
+        Previous
     </a>
 }
 @if (Model.PageViewModel.HasNextPage)
@@ -105,7 +110,7 @@
         asp-route-date="@(Model.FilterViewModel.SelectedDate)"
        asp-route-sortorder="@(Model.SortViewModel.Current)"
        class="btn btn-default btn">
-        Вперед
+        Next
         <i class="glyphicon glyphicon-chevron-right"></i>
     </a>
 }

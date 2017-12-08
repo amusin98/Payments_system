@@ -4,10 +4,10 @@
     Layout = "~/Views/Shared/Layout_admin.cshtml";
 }
 
-<h2>Add</h2>
+<h2>Add goal</h2>
 <form asp-controller="Goals" asp-action="Add" method="post">
     <label>Name of goal:</label>
-    <input type="text" class="form-control" name="goal" /><br>
+    <input type="text" class="form-control" name="goal" required/><br>
     <input type="submit" class="btn btn-success" value="Add" />
 </form>
 <br />
